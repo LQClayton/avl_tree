@@ -112,6 +112,7 @@ class Node:
                 parent.right = successor.right
                 if parent.right:
                     parent.right.parent = parent
+        self.rebalance_delete()
 
     def children_count(self):
         """
@@ -221,6 +222,7 @@ class Node:
                     self.right.insert(data)
         else:
             self.data = data
+        self.rebalance_insert()
 
     def rotate_right(self):
         """
@@ -303,7 +305,15 @@ class Node:
         Should run on the node and return the height of the node.
         :return integer:
         '''
-        ...
+        if self.children_count() == 0:
+            return 1
+        else:
+            childHeights = []
+            if self.left != None:
+                childHeights.append(self.left.get_height())
+            if self.right != None:
+                childHeights.append(self.right.get_height())
+            return max(childHeights)
 
     def unbalanced(self):
         '''
@@ -311,8 +321,15 @@ class Node:
         the subtree rooted at this node is balanced.
         :return boolean:
         '''
-        ...
-
+        heights = [0,0]
+        if self.left != None:
+            heights[0] = self.left.get_height()
+        if self.right != None:
+            heights[1] = self.right.get_height()
+        if abs(heights[0]-heights[1]) > 1:
+            return False
+        return True
+        
     def rebalance_insert(self):
         x = self
         if not x.parent:
@@ -326,20 +343,37 @@ class Node:
         if z.unbalanced():
             if z.left == y:
                 if y.left == x:
+                    #x, y z different??
+
                     # ll case
-                    ...
+                    y.parent = z.parent
+                    z.parent = y
+                    y.right = z
                 else:
                     # lr case
-                    ...
+                    x.parent = y.parent
+                    y.parent = x
+                    x.left = y
+
+                    x.parent = z.parent #add relation to z.parent ie parent.right or parent.left
+                    z.parent = x
+                    x.right = z
             else:
                 if y.right == x:
                     # rr case
-                    ...
+                    y.parent = z.parent
+                    z.parent = y
+                    y.left = z 
                 else:
                     # rl case
-                    ...
+                    x.parent = y.parent
+                    y.parent = x
+                    x.right = y
+
+                    x.parent = z.parent #add relation to z.parent ie parent.right or parent.left
+                    z.parent = x
+                    x.left = z
             pass
-        #else done
 
 
     def rebalance_delete(self):
@@ -370,19 +404,33 @@ class Node:
 
             if z.left == y:
                 if y.left == x:
-                    # ll case
-                    ...
+                    #ll
+                    y.parent = z.parent
+                    z.parent = y
+                    y.right = z
                 else:
                     # lr case
-                    ...
+                    x.parent = y.parent
+                    y.parent = x
+                    x.left = y
+
+                    x.parent = z.parent #add relation to z.parent ie parent.right or parent.left
+                    z.parent = x
+                    x.right = z
             else:
                 if y.right == x:
                     # rr case
-                    ...
+                    y.parent = z.parent
+                    z.parent = y
+                    y.left = z 
                 else:
                     # rl case
-                    ...
+                    x.parent = y.parent
+                    y.parent = x
+                    x.right = y
+
+                    x.parent = z.parent #add relation to z.parent ie parent.right or parent.left
+                    z.parent = x
+                    x.left = z
             pass
         #else done
-
-
